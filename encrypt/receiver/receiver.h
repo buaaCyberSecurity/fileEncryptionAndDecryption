@@ -17,5 +17,5 @@ int sendSeed(unsigned char *seed,int s_len,int sock);
 int recvEncryptedData(unsigned char *dae,int d_len,int sock);
 int recvPKeyAndLen(unsigned char *b_f, int32_t *pk_len,int sock);
 int genSeed(unsigned char* ranstr);
-int recvFile(unsigned char *data_after_encrypt,unsigned char *data_after_decrypt,AES_KEY *AESDecryptKey,int sock);
+int recvFile(unsigned char *data_after_encrypt,unsigned char *data_after_decrypt,unsigned char *expansionkey,int sock);
 #endif // RECEIVER_H_INCLUDED

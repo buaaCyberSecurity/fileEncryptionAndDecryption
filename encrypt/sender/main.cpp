@@ -1,7 +1,8 @@
 #include "sender.h"
+#include "aes.h"
 
 int main(){
-    int serv_sock=getServerSocket("192.168.0.100",8000);
+    int serv_sock=getServerSocket("192.168.1.104",8000);
     printf("Sender socket ready.\n");
     printf("Waiting for connection...\n");
     int clnt_sock=waitForConnection(serv_sock);
@@ -40,10 +41,10 @@ int main(){
     RSA_private_decrypt(128, (const unsigned char*)buffer, outseed, ClientRSA, RSA_NO_PADDING);
     printf("The origin seed is %s\n",outseed);
     //aes-key
-    unsigned char aesSeed[32]; //If you use no-padding while encrypting the origin seed, it must be 128bytes, but we only need the first 32bytes.
-    strncpy((char*)aesSeed,(const char*)outseed,32);
-    AES_KEY AESEncryptKey;
-    AES_set_encrypt_key(aesSeed, 256, &AESEncryptKey);
+    unsigned char aesSeed[16]; //If you use no-padding while encrypting the origin seed, it must be 128bytes, but we only need the first 32bytes.
+    unsigned char expansionkey[15*16];
+    strncpy((char*)aesSeed,(const char*)outseed,16);
+    ScheduleKey(aesSeed, expansionkey, 4, 10);
     printf("Negotiation completes.\n");
     unsigned char path[4097];
     unsigned char fname[4097];
@@ -67,7 +68,7 @@ int main(){
         fsize=ftell(fp);
         fseek(fp,0,SEEK_SET);
         memset(data_to_encrypt,0,sizeof(data_to_encrypt));
-        sendFile(fp,fsize,path,data_to_encrypt,data_after_encrypt,&AESEncryptKey,clnt_sock);
+        sendFile(fp,fsize,path,data_to_encrypt,data_after_encrypt,expansionkey,clnt_sock);
         fclose(fp);
     }
     RSA_free(ClientRSA);

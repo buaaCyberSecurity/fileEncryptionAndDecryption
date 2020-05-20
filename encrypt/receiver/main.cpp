@@ -1,6 +1,5 @@
-
-
 #include "receiver.h"
+#include "aes.h"
 
 int main()
 {
@@ -10,7 +9,7 @@ int main()
     struct sockaddr_in serv_addr;
     memset(&serv_addr, 0, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;  //ipv4
-    serv_addr.sin_addr.s_addr = inet_addr("192.168.0.100");  //ip address
+    serv_addr.sin_addr.s_addr = inet_addr("192.168.1.104");  //ip address
     serv_addr.sin_port = htons(8000);  //port
     int result=connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
     if(result==-1){
@@ -58,15 +57,15 @@ int main()
     sendSeed(outseed,SEED_LEN,sock);
     unsigned char data_after_encrypt[16];
     unsigned char data_after_decrypt[16];
-    unsigned char aesSeed[32];
-    strncpy((char*)aesSeed,(const char*)seed,32);
-    AES_KEY AESDecryptKey;
-    AES_set_decrypt_key(aesSeed, 256, &AESDecryptKey);
+    unsigned char aesSeed[16];
+    unsigned char expansionkey[15*16];
+    strncpy((char*)aesSeed,(const char*)seed,16);
+    ScheduleKey(aesSeed, expansionkey, 4, 10);
     while(1){
         //receive data
         printf("Wainting For File...\n");
         memset(data_after_encrypt,0,sizeof(data_after_encrypt));
-        recvFile(data_after_encrypt,data_after_decrypt,&AESDecryptKey,sock);
+        recvFile(data_after_encrypt,data_after_decrypt,expansionkey,sock);
     }
     RSA_free(EncryptRsa);
     close(sock);

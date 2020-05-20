@@ -1,11 +1,13 @@
 CC = g++
 CFLAGS = -lssl -lcrypto
 
-rec:main.o receiver.o
-	$(CC) -o send main.o sender.o $(CFLAGS)
+send:main.o sender.o aes.o
+	$(CC) -o send main.o sender.o aes.o $(CFLAGS)
 main.o:main.cpp
 	$(CC) -c main.cpp $(CFLAGS)
-receiver.o:sender.cpp
+sender.o:sender.cpp
 	$(CC) -c sender.cpp $(CFLAGS)
+aes.o:aes.cpp
+	$(CC) -c aes.cpp $(CFLAGS)
 clean:
-	rm rec main.o sender.o
+	rm send main.o sender.o aes.o
