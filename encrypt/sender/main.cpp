@@ -1,6 +1,7 @@
 #include "sender.h"
 #include "aes.h"
 #include "rsa.h"
+const int seedEncryptLen = 127 << 2;
 
 int main(){
     int serv_sock=getServerSocket("127.0.0.1",8000);
@@ -36,12 +37,15 @@ int main(){
     //receive the encrypted seed.
     unsigned char buffer[128 << 2];
     unsigned char *s_b=buffer;
-    recvSeed(s_b,128<<2,clnt_sock);
-    printf("The encrypted seed is %s\n",buffer);
+    recvSeed(s_b,seedEncryptLen,clnt_sock);
+    printf("The encrypted seed is:\n");
+    for (int i = 0; i < seedEncryptLen; ++i)
+        printf("0x%02x ", buffer[i]);
+    printf("\n");
     //decrypt the seed.
     char outseed[128];
     memset(outseed, 0, sizeof(outseed));
-    RSA_private_decrypt(128, (const unsigned char*)buffer, outseed);
+    RSA_private_decrypt(seedEncryptLen, (const unsigned char*)buffer, outseed);
     printf("The origin seed is %s\n",outseed);
     //aes-key
     unsigned char aesSeed[16]; //If you use no-padding while encrypting the origin seed, it must be 128bytes, but we only need the first 32bytes.
