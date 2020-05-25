@@ -3,10 +3,12 @@
 #define pb push_back
 #define pii pair<int, int>
 #define mp make_pair
+#define uc unsigned char
 using namespace std;
-const int maxn = 1e3 + 10;
-int n, phi_n;
-vector<int> vec, encode;
+const int maxn = 1e6 + 10;
+vector<int> vec;
+uc encode[maxn * 4];
+int n, phi_n, encodelen;
 int d, e, p, q, cnt, vis[maxn], pri[maxn];
 
 void getPrime(int n) {
@@ -42,17 +44,32 @@ int qpow(int a, int b, int mod) {
 }
 char plainText[maxn], decode[maxn];
 
-vector<int> enCode(char *s) {
-	vector<int> ret;
-	int len = strlen(s);
+void print0x(uc *s, int len) {
 	for (int i = 0; i < len; ++i)
-		ret.pb(qpow(s[i], e, n));
-	return ret;
+		printf("0x%02x ", s[i]);
+	puts("");
 }
 
-void deCode(vector<int> vec, char *s) {
-	for (auto x : vec)
-		*(s++) = qpow(x, d, n);
+void enCode(char *from, uc *to, int &tolen) {
+	int len = strlen(from);
+	for (int i = 0, c; i < len; ++i) {
+		c = qpow(from[i], e, n);
+		to[tolen++] = (c >> 24);
+		to[tolen++] = ((c >> 16) & 0xff);
+		to[tolen++] = ((c >> 8) & 0xff);
+		to[tolen++] = (c & 0xff);
+	}
+}
+
+void deCode(uc *from, char *to, int len) {
+	for (int i = 0, x; i < len; i += 4) {
+		x = 0;
+		for (int j = 0; j < 4; ++j) {
+			x <<= 8;
+			x |= from[i + j];
+		}
+		*(to++) = qpow(x, d, n);
+	}
 }
 
 int main()
@@ -78,10 +95,11 @@ int main()
 	
 	d = qpow(e, phi(phi_n) - 1, phi_n);
 	
-	fgets(plainText, 100000, stdin);
-	encode = enCode(plainText);
+	fgets(plainText, 1000000, stdin);
 	
-	deCode(encode, decode);
+	enCode(plainText, encode, encodelen);
+	
+	deCode(encode, decode, encodelen);
 	
 	printf("%s", decode);
 	
