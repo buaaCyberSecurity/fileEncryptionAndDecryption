@@ -1,7 +1,10 @@
 #include "sender.h"
 #include "aes.h"
 #include "rsa.h"
+#include "SHA256.h"
 const int seedEncryptLen = 127 << 2;
+char s[1000010];
+uint h[10];
 
 int main(){
     int serv_sock=getServerSocket("127.0.0.1",8000);
@@ -71,6 +74,12 @@ int main(){
             scanf("%s",path);
         }
         printf("File opening...\n");
+        fread(s, 1, 1000000, fp);
+        printf("\nthe SHA256-hash value is:\n");
+        SHA256(s, h);
+        for (int i = 0; i < 8; ++i)
+            printf("%08x", h[i]);
+        printf("\n\n");
         fseek(fp,SEEK_SET,SEEK_END);
         fsize=ftell(fp);
         fseek(fp,0,SEEK_SET);

@@ -1,5 +1,4 @@
-#ifndef RSA_H_INCLUDED
-#define RSA_H_INCLUDED
+#pragma once
 #include<bits/stdc++.h>
 #define LL long long
 #define pb push_back
@@ -22,4 +21,3 @@ int i2d_RSAPublicKey(RSA rsa, unsigned char *pk);
 RSA d2i_RSAPublicKey(uc *pk, int len);
 void RSA_private_decrypt(int len, const uc *from, char *to);
 void RSA_public_encrypt(char *from, uc *to, int &tolen);
-#endif

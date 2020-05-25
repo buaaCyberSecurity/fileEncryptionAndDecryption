@@ -1,6 +1,6 @@
 #include "rsa.h"
 uc encode[maxn * 4];
-int n, phi_n, encodelen;
+int N, phi_n, encodelen;
 int d, e, cnt, vis[maxn], pri[maxn];
 
 void getPrime(int n) {
@@ -56,7 +56,7 @@ void RSA_private_decrypt(int len, const uc *from, char *to) {
 			x <<= 8;
 			x |= from[i + j];
 		}
-		*(to++) = qpow(x, d, n);
+		*(to++) = qpow(x, d, N);
 	}
 }
 
@@ -73,7 +73,7 @@ RSA RSA_generate_key() {
 
 int i2d_RSAPublicKey(RSA rsa, uc *pk) {
 	vector<int> vec;
-	n = rsa.vec[0] * rsa.vec[1];
+	N = rsa.vec[0] * rsa.vec[1];
 	phi_n = (rsa.vec[0] - 1) * (rsa.vec[1] - 1);
 	for (int i = 11; i <= cnt; ++i)
 		if (pri[i] < phi_n && phi_n % pri[i] != 0)
@@ -81,9 +81,9 @@ int i2d_RSAPublicKey(RSA rsa, uc *pk) {
 	e = vec[rand() % vec.size()];
 	d = qpow(e, phi(phi_n) - 1, phi_n);
 	int len = 0;
-	int2char(pk, len, n);
+	int2char(pk, len, N);
 	int2char(pk, len, e);
-	printf("the public key is:\n(%d %d)\n", n, e);
+	printf("the public key is:\n(%d %d)\n", N, e);
 	return len;
 }
 
