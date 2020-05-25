@@ -1,5 +1,8 @@
 #include "receiver.h"
 #include "aes.h"
+#include "SHA256.h"
+char s[1000010];
+uint h[10];
 
 int sendSeed(unsigned char *seed,int s_len,int sock){
     char* data=(char*)seed;
@@ -100,7 +103,7 @@ int recvFile(unsigned char *data_after_encrypt,unsigned char *data_after_decrypt
     Contrary_AesEncrypt((unsigned char*)p_fs,expansionkey, 10);
     strncpy(fs,(const char*)p_fs,8);
     fsize=*((unsigned long*)fs);
-    printf("File size:%lu\n",fsize);
+    printf("File size:%lu bytes\n",fsize);
     unsigned long times=((unsigned long)(fsize/16))+1;
     char fn[256];
     memset(fn,0,sizeof(fn));
@@ -125,4 +128,11 @@ int recvFile(unsigned char *data_after_encrypt,unsigned char *data_after_decrypt
     }
     fclose(fp);
     printf("Completes!\n");
+    fp = fopen((const char*)fn, "r");
+    fread(s, 1, 1000000, fp);
+    printf("\nthe receiver SHA256-hash value is:\n");
+    SHA256(s, h);
+    for (int i = 0; i < 8; ++i)
+        printf("%08x", h[i]);
+    printf("\n\n");
 }

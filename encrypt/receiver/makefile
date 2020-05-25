@@ -1,8 +1,8 @@
 CC = g++
 CFLAGS = -lssl -lcrypto -std=c++11
 
-receiver:main.o receiver.o aes.o rsa.o
-	$(CC) -o receiver main.o receiver.o aes.o rsa.o $(CFLAGS)
+receiver:main.o receiver.o aes.o rsa.o SHA256.o
+	$(CC) -o receiver main.o receiver.o aes.o rsa.o SHA256.o $(CFLAGS)
 main.o:main.cpp
 	$(CC) -c main.cpp $(CFLAGS)
 receiver.o:receiver.cpp
@@ -11,5 +11,7 @@ aes.o:aes.cpp
 	$(CC) -c aes.cpp $(CFLAGS)
 rsa.o:rsa.cpp
 	$(CC) -c rsa.cpp $(CFLAGS)
+SHA256.o:SHA256.cpp
+	$(CC) -c SHA256.cpp $(CFLAGS)
 clean:
-	rm receiver main.o receiver.o aes.o rsa.o
+	rm receiver main.o receiver.o aes.o rsa.o SHA256.o

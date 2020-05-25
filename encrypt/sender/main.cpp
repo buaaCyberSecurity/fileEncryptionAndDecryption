@@ -75,17 +75,17 @@ int main(){
         }
         printf("File opening...\n");
         fread(s, 1, 1000000, fp);
-        printf("\nthe SHA256-hash value is:\n");
-        SHA256(s, h);
-        for (int i = 0; i < 8; ++i)
-            printf("%08x", h[i]);
-        printf("\n\n");
         fseek(fp,SEEK_SET,SEEK_END);
         fsize=ftell(fp);
         fseek(fp,0,SEEK_SET);
         memset(data_to_encrypt,0,sizeof(data_to_encrypt));
         sendFile(fp,fsize,path,data_to_encrypt,data_after_encrypt,expansionkey,clnt_sock);
         fclose(fp);
+        printf("\nthe sender SHA256-hash value is:\n");
+        SHA256(s, h);
+        for (int i = 0; i < 8; ++i)
+            printf("%08x", h[i]);
+        printf("\n\n");
     }
     close(serv_sock);
     return 0;
