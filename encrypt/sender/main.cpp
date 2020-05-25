@@ -3,7 +3,7 @@
 #include "rsa.h"
 
 int main(){
-    int serv_sock=getServerSocket("192.168.43.52",8000);
+    int serv_sock=getServerSocket("127.0.0.1",8000);
     printf("Sender socket ready.\n");
     printf("Waiting for connection...\n");
     int clnt_sock=waitForConnection(serv_sock);

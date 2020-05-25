@@ -49,8 +49,10 @@ void int2char(uc *s, int &len, int c) {
 	s[len++] = (c & 0xff);
 }
 
-void RSA_public_encrypt(char *from, uc *to, int &tolen) {
+void RSA_public_encrypt(char *from, uc *to, int &tolen, RSA EncryptRsa) {
 	int len = strlen(from);
+	n = EncryptRsa.vec[0];
+	e = EncryptRsa.vec[1];
 	for (int i = 0, c; i < len; ++i) {
 		c = qpow(from[i], e, n);
 		int2char(to, tolen, c);
@@ -107,37 +109,3 @@ RSA d2i_RSAPublicKey(uc *pk, int len) {
 	}
 	return (RSA) { vec };
 }
-
-/*int main()
-{
-	freopen("test.txt", "r", stdin);
-	
-	srand(time(0));
-	getPrime(1000);
-	
-	p = pri[rand() % (cnt - 10) + 11];
-	q = pri[rand() % (cnt - 10) + 11];
-	while (p == q) q = pri[rand() % cnt + 1];
-	
-	n = p * q;
-	
-	phi_n = (p - 1) * (q - 1);
-	
-	for (int i = 11; i <= cnt; ++i)
-		if (pri[i] < phi_n && phi_n % pri[i] != 0)
-			vec.pb(pri[i]);
-
-	e = vec[rand() % vec.size()];
-	
-	d = qpow(e, phi(phi_n) - 1, phi_n);
-	
-	fgets(plainText, 1000000, stdin);
-	
-	enCode(plainText, encode, encodelen);
-	
-	deCode(encode, decode, encodelen);
-	
-	printf("%s", decode);
-	
-	return 0;
-}*/
