@@ -1,13 +1,4 @@
-#include<bits/stdc++.h>
-#define LL long long
-#define pb push_back
-#define pii pair<int, int>
-#define mp make_pair
-#define uc unsigned char
 #include "rsa.h"
-using namespace std;
-const int maxn = 1e6 + 10;
-vector<int> vec;
 uc encode[maxn * 4];
 int n, phi_n, encodelen;
 int d, e, cnt, vis[maxn], pri[maxn];
@@ -66,7 +57,7 @@ void enCode(char *from, uc *to, int &tolen) {
 	}
 }
 
-void deCode(uc *from, char *to, int len) {
+void RSA_private_decrypt(int len, const uc *from, char *to) {
 	for (int i = 0, x; i < len; i += 4) {
 		x = 0;
 		for (int j = 0; j < 4; ++j) {
@@ -89,6 +80,7 @@ RSA RSA_generate_key() {
 }
 
 int i2d_RSAPublicKey(RSA rsa, uc *pk) {
+	vector<int> vec;
 	n = rsa.vec[0] * rsa.vec[1];
 	phi_n = (rsa.vec[0] - 1) * (rsa.vec[1] - 1);
 	for (int i = 11; i <= cnt; ++i)
@@ -99,6 +91,7 @@ int i2d_RSAPublicKey(RSA rsa, uc *pk) {
 	int len = 0;
 	int2char(pk, len, n);
 	int2char(pk, len, e);
+	printf("the public key is:\n(%d %d)\n", n, e);
 	return len;
 }
 

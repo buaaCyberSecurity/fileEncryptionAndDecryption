@@ -3,11 +3,11 @@
 #include "rsa.h"
 
 int main(){
-    /*int serv_sock=getServerSocket("192.168.43.52",8000);
+    int serv_sock=getServerSocket("192.168.43.52",8000);
     printf("Sender socket ready.\n");
     printf("Waiting for connection...\n");
     int clnt_sock=waitForConnection(serv_sock);
-    printf("Connection built.\n");*/
+    printf("Connection built.\n");
     
     RSA ClientRSA = RSA_generate_key();
     //print the rsa.
@@ -26,7 +26,7 @@ int main(){
     }
     printf("\n");
     //send public key information and key length to receiver.
-    //sendKey(PublicKey,PublicKeyLen,clnt_sock); =============================================================
+    sendKey(PublicKey,PublicKeyLen,clnt_sock);
     //Again, for comparison.
     PKey = PublicKey;
     RSA EncryptRsa = d2i_RSAPublicKey(PublicKey, PublicKeyLen);
@@ -36,12 +36,12 @@ int main(){
     //receive the encrypted seed.
     unsigned char buffer[128];
     unsigned char *s_b=buffer;
-    /*recvSeed(s_b,128,clnt_sock);
+    recvSeed(s_b,128,clnt_sock);
     printf("The encrypted seed is %s\n",buffer);
     //decrypt the seed.
-    unsigned char outseed[128];
+    char outseed[128];
     memset(outseed, 0, sizeof(outseed));
-    RSA_private_decrypt(128, (const unsigned char*)buffer, outseed, ClientRSA, RSA_NO_PADDING);
+    RSA_private_decrypt(128, (const unsigned char*)buffer, outseed);
     printf("The origin seed is %s\n",outseed);
     //aes-key
     unsigned char aesSeed[16]; //If you use no-padding while encrypting the origin seed, it must be 128bytes, but we only need the first 32bytes.
@@ -74,6 +74,6 @@ int main(){
         sendFile(fp,fsize,path,data_to_encrypt,data_after_encrypt,expansionkey,clnt_sock);
         fclose(fp);
     }
-    close(serv_sock);*/
+    close(serv_sock);
     return 0;
 }

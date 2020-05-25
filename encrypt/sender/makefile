@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -lssl -lcrypto
+CFLAGS = -lssl -lcrypto -std=c++11
 
 send:main.o sender.o aes.o rsa.o
 	$(CC) -o send main.o sender.o aes.o rsa.o $(CFLAGS)
