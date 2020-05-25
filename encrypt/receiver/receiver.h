@@ -9,9 +9,9 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <errno.h>
-#include <openssl/rsa.h>
+//#include <openssl/rsa.h>
 #include <openssl/aes.h>
-#include <openssl/err.h>
+//#include <openssl/err.h>
 #define SEED_LEN 128
 int sendSeed(unsigned char *seed,int s_len,int sock);
 int recvEncryptedData(unsigned char *dae,int d_len,int sock);

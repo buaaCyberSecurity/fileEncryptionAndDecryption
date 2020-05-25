@@ -34,9 +34,9 @@ int main(){
     EncryptRsa.print();
 
     //receive the encrypted seed.
-    unsigned char buffer[128];
+    unsigned char buffer[128 << 2];
     unsigned char *s_b=buffer;
-    recvSeed(s_b,128,clnt_sock);
+    recvSeed(s_b,128<<2,clnt_sock);
     printf("The encrypted seed is %s\n",buffer);
     //decrypt the seed.
     char outseed[128];
