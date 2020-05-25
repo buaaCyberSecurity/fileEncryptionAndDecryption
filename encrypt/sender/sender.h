@@ -1,7 +1,7 @@
 #ifndef SENDER_H_INCLUDED
 #define SENDER_H_INCLUDED
 #include <string.h>
-#include <openssl/rsa.h>
+//#include <openssl/rsa.h>
 #include <openssl/aes.h>
 #include <stdio.h>
 #include <string.h>
