@@ -2,7 +2,7 @@
 #define SENDER_H_INCLUDED
 #include <string.h>
 //#include <openssl/rsa.h>
-#include <openssl/aes.h>
+//#include <openssl/aes.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
