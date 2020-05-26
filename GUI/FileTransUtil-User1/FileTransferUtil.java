@@ -118,7 +118,7 @@ public class FileTransferUtil {
             public void actionPerformed(ActionEvent e) {
                 try {
 //                    exec("chmod +777 ./run.sh");
-//                    System.out.println("chmod success");
+                    System.out.println("chmod success");
                     String cmd = "./sender/send \"" + textField1.getText() + "\" " + textField2.getText() + " " + textField3.getText();
                     System.out.println(cmd);
                     exec(cmd);

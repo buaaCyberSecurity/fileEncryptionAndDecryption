@@ -1,4 +1,5 @@
 #include "sender.h"
+#include "string.h"
 #include "aes.h"
 #include "rsa.h"
 #include "SHA256.h"
@@ -6,8 +7,8 @@ const int seedEncryptLen = 127 << 2;
 char s[1000010];
 uint h[10];
 
-int main(){
-    int serv_sock=getServerSocket("127.0.0.1",8000);
+int main(int argc,char *argv[]){
+    int serv_sock=getServerSocket(argv[1],atoi(argv[2]));
     printf("Sender socket ready.\n");
     printf("Waiting for connection...\n");
     int clnt_sock=waitForConnection(serv_sock);
@@ -62,21 +63,14 @@ int main(){
     unsigned char data_after_encrypt[16];
     unsigned char *dae;
     unsigned long fsize;
-    while(1){
-        memset(path,0,sizeof(path));
-        printf("Please input path of the file you wanna send:\n");
-        scanf("%s",path);
-        FILE* fp;
-        while((fp=fopen((const char*)path,"rb"))==NULL){
-            memset(path,0,sizeof(path));
-            printf("File error!\n");
-            printf("Please input path of the file you wanna send:\n");
-            scanf("%s",path);
-        }
+    
+    printf("Send file start... \n");
+    FILE* fp;
+    strcpy((char *)path,argv[3]);
+    if((fp = fopen((const char*)path,"rb"))!=NULL){	 
         printf("File opening...\n");
-        fread(s, 1, 1000000, fp);
         fseek(fp,SEEK_SET,SEEK_END);
-        fsize=ftell(fp);
+        fsize=ftell(fp);	
         fseek(fp,0,SEEK_SET);
         memset(data_to_encrypt,0,sizeof(data_to_encrypt));
         sendFile(fp,fsize,path,data_to_encrypt,data_after_encrypt,expansionkey,clnt_sock);

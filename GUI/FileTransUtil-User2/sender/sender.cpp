@@ -1,4 +1,5 @@
 #include "sender.h"
+#include "aes.h"
 
 int getServerSocket(const char *ip,int port){
     int serv_sock=socket(AF_INET,SOCK_STREAM,0);
@@ -107,7 +108,7 @@ int recvSeed(unsigned char *s_b,int s_len,int clnt_sock){
 }
 
 
-int sendFile(FILE* fp,unsigned long fsize,unsigned char *path,unsigned char *data_to_encrypt,unsigned char *data_after_encrypt,AES_KEY *AESEncryptKey,int clnt_sock){
+int sendFile(FILE* fp,unsigned long fsize,unsigned char *path,unsigned char *data_to_encrypt,unsigned char *data_after_encrypt,unsigned char *expansionkey,int clnt_sock){
     //send file size
     unsigned long times=((unsigned long)(fsize/16))+1;
     printf("File size:%lu bytes\n",fsize);
@@ -115,9 +116,9 @@ int sendFile(FILE* fp,unsigned long fsize,unsigned char *path,unsigned char *dat
     char p_fs[16];//padding to 16bytes
     memset(p_fs,0,sizeof(p_fs));
     strncpy(p_fs,(const char*)fs,sizeof(fs));
-    char e_fs[16];
-    AES_encrypt((unsigned char*)p_fs, (unsigned char*)e_fs, AESEncryptKey);
-    sendData((unsigned char*)e_fs,sizeof(e_fs),clnt_sock);
+    AesEncrypt((unsigned char*)p_fs, expansionkey, 10);
+    //~ printf("encrypt File size:%lu bytes\n",fsize);
+    sendData((unsigned char*)p_fs,sizeof(p_fs),clnt_sock);
     //send file name
     const char ch='/';
     const char *ret;
@@ -130,16 +131,18 @@ int sendFile(FILE* fp,unsigned long fsize,unsigned char *path,unsigned char *dat
         strcpy(fn,(const char*)path);
     }
     printf("File name:%s\n",fn);
-    char e_fn[256];
-    AES_encrypt((unsigned char*)fn, (unsigned char*)e_fn, AESEncryptKey);
-    sendData((unsigned char*)e_fn,sizeof(e_fn),clnt_sock);
+    Aes_256_encrypt((unsigned char*)fn, expansionkey, 10);
+    //~ printf("encrypt File name:%s\n",fn);
+    sendData((unsigned char*)fn,sizeof(fn),clnt_sock);
     //send data
     printf("Sending File...\n");
     for(unsigned long i=0;i<times;i++){
         fread(data_to_encrypt,16,1,fp);
-        AES_encrypt(data_to_encrypt, data_after_encrypt, AESEncryptKey);
-        sendData(data_after_encrypt,16,clnt_sock);
+        AesEncrypt(data_to_encrypt, expansionkey, 10);
+        sendData(data_to_encrypt,16,clnt_sock);
     }
     printf("Completes!\n");
     return 0;
 }
+
+

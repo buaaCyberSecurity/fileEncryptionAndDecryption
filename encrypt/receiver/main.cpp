@@ -1,8 +1,9 @@
 #include "receiver.h"
+#include "string.h"
 #include "aes.h"
 #include "rsa.h"
 
-int main()
+int main(int argc,char *argv[])
 {
     //get socket
     int sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -10,8 +11,8 @@ int main()
     struct sockaddr_in serv_addr;
     memset(&serv_addr, 0, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;  //ipv4
-    serv_addr.sin_addr.s_addr = inet_addr("127.0.0.1");  //ip address
-    serv_addr.sin_port = htons(8000);  //port
+    serv_addr.sin_addr.s_addr = inet_addr(argv[1]);  //ip address
+    serv_addr.sin_port = htons(atoi(argv[2]));  //port
     int result=connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
     if(result==-1){
         printf("errno for connection is %d\n",errno);
@@ -56,12 +57,12 @@ int main()
     unsigned char expansionkey[15*16];
     strncpy((char*)aesSeed,(const char*)seed,16);
     ScheduleKey(aesSeed, expansionkey, 4, 10);
-    while(1){
-        //receive data
-        printf("Waiting For File...\n");
-        memset(data_after_encrypt,0,sizeof(data_after_encrypt));
-        recvFile(data_after_encrypt,data_after_decrypt,expansionkey,sock);
-    }
+
+    //receive data
+    printf("Waiting For File...\n");
+    memset(data_after_encrypt,0,sizeof(data_after_encrypt));
+    recvFile(data_after_encrypt,data_after_decrypt,expansionkey,sock);
+    
     close(sock);
     return 0;
 }
