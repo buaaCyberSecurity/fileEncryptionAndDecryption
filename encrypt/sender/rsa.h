@@ -20,4 +20,4 @@ RSA RSA_generate_key();
 int i2d_RSAPublicKey(RSA rsa, unsigned char *pk);
 RSA d2i_RSAPublicKey(uc *pk, int len);
 void RSA_private_decrypt(int len, const uc *from, char *to);
-void RSA_public_encrypt(char *from, uc *to, int &tolen);
+void RSA_public_encrypt(char *from, uc *to, int &tolen, RSA EncryptRsa);

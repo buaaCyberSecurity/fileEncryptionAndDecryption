@@ -128,6 +128,7 @@ int recvFile(unsigned char *data_after_encrypt,unsigned char *data_after_decrypt
     }
     fclose(fp);
     printf("Completes!\n");
+    //cal SHA256 val
     fp = fopen((const char*)fn, "r");
     fread(s, 1, 1000000, fp);
     printf("\nthe receiver SHA256-hash value is:\n");

@@ -9,16 +9,19 @@ void SHA256(char *s, uint *sha256) {
 	uint w[100];
 	vector<int> bin;
 	int n = strlen(s);
-	while (s[n - 1] == 10) s[n--] = 0;
+	//信息预处理
+	while (s[n - 1] == 10) s[n--] = 0;//去掉末尾换行符
 	for (int i = 0; i < n; ++i) {
 		for (int j = 7; j >= 0; --j)
 			if (s[i] & (1 << j))
 				bin.pb(1);
 			else bin.pb(0);
 	}
+	//附加填充比特
 	bin.pb(1);
 	while (bin.size() % 512 != 448)
 		bin.pb(0);
+	//附加长度值
 	LL sumLen = n * 8;
 	for (int j = 63; j >= 0; --j)
 		if (sumLen & (1ll << j))
@@ -26,7 +29,7 @@ void SHA256(char *s, uint *sha256) {
 		else bin.pb(0);
 		
 	assert(bin.size() % 512 == 0);
-	
+	//计算哈希值
 	uint s0, s1, maj, t1, t2, ch;
 	int blockNum = bin.size() / 512;
 	for (int blk = 1, st = 0; blk <= blockNum; ++blk) {

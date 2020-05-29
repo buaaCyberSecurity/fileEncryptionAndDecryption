@@ -34,7 +34,6 @@ int main()
     RSA EncryptRsa = d2i_RSAPublicKey(buffer, (int)ntohl(pk_len));
     printf("You can compare this with the public key on the sender.\n");
     EncryptRsa.print();
-
     //encrypt process
     char seed[SEED_LEN];
     unsigned char outseed[SEED_LEN << 2];
@@ -45,9 +44,6 @@ int main()
     int l = 0;
     RSA_public_encrypt(seed, outseed, l, EncryptRsa);
     printf("The seed is:\n%s\n\n\n\n\n", seed);
-    for (int i = 0; i < l; ++i)
-        printf("0x%02x ", *(outseed+i));
-    printf("\n");
     //send encrypted seed
     sendSeed(outseed,l,sock);
     unsigned char data_after_encrypt[16];

@@ -4,6 +4,7 @@ int N, phi_n, encodelen;
 int d, e, cnt, vis[maxn], pri[maxn];
 
 void getPrime(int n) {
+	//线性筛出1～n中的素数
 	for (int i = 2; i <= n; ++i) {
 		if (!vis[i]) pri[++cnt] = i;
 		for (int j = 1; j <= cnt && i * pri[j] <= n; ++j) {
@@ -14,6 +15,7 @@ void getPrime(int n) {
 }
 
 int phi(int n) {
+	//根据公式计算phi(n)
 	int ret = 1;
 	for (int i = 1, num, pro; i <= cnt; ++i) {
 		num = 0; pro = 1;
@@ -28,6 +30,7 @@ int phi(int n) {
 }
 
 int qpow(int a, int b, int mod) {
+	//快速幂计算a^b % mod
 	if (!b) return 1;
 	int ret = qpow(a, b / 2, mod);
 	ret = 1ll * ret * ret % mod;
@@ -43,6 +46,7 @@ void print0x(uc *s, int len) {
 }
 
 void int2char(uc *s, int &len, int c) {
+	//把32位的int拆成4个8位的unsigned char
 	s[len++] = (c >> 24);
 	s[len++] = ((c >> 16) & 0xff);
 	s[len++] = ((c >> 8) & 0xff);
@@ -50,6 +54,7 @@ void int2char(uc *s, int &len, int c) {
 }
 
 void RSA_private_decrypt(int len, const uc *from, char *to) {
+	//对得到的字符串进行解密
 	for (int i = 0, x; i < len; i += 4) {
 		x = 0;
 		for (int j = 0; j < 4; ++j) {
@@ -61,6 +66,7 @@ void RSA_private_decrypt(int len, const uc *from, char *to) {
 }
 
 RSA RSA_generate_key() {
+	//随机生成两个质数
 	srand(time(0));
 	getPrime(1000);
 	int p = pri[rand() % (cnt - 10) + 11];
@@ -72,6 +78,7 @@ RSA RSA_generate_key() {
 }
 
 int i2d_RSAPublicKey(RSA rsa, uc *pk) {
+	//生成公钥信息
 	vector<int> vec;
 	N = rsa.vec[0] * rsa.vec[1];
 	phi_n = (rsa.vec[0] - 1) * (rsa.vec[1] - 1);
@@ -88,6 +95,7 @@ int i2d_RSAPublicKey(RSA rsa, uc *pk) {
 }
 
 RSA d2i_RSAPublicKey(uc *pk, int len) {
+	//根据公钥信息得到公钥
 	vector<int> vec;
 	for (int i = 0, x; i < len; i += 4) {
 		x = 0;

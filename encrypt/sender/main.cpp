@@ -36,7 +36,6 @@ int main(){
     RSA EncryptRsa = d2i_RSAPublicKey(PublicKey, PublicKeyLen);
     printf("You can compare this with the public key on the receiver.\n");
     EncryptRsa.print();
-
     //receive the encrypted seed.
     unsigned char buffer[128 << 2];
     unsigned char *s_b=buffer;
@@ -49,19 +48,20 @@ int main(){
     char outseed[128];
     memset(outseed, 0, sizeof(outseed));
     RSA_private_decrypt(seedEncryptLen, (const unsigned char*)buffer, outseed);
-    printf("The origin seed is %s\n",outseed);
+    printf("The origin seed is:\n%s\n\n\n",outseed);
     //aes-key
     unsigned char aesSeed[16]; //If you use no-padding while encrypting the origin seed, it must be 128bytes, but we only need the first 32bytes.
     unsigned char expansionkey[15*16];
     strncpy((char*)aesSeed,(const char*)outseed,16);
     ScheduleKey(aesSeed, expansionkey, 4, 10);
-    printf("Negotiation completes.\n");
+    printf("Negotiation completes.\n\n\n");
     unsigned char path[4097];
     unsigned char fname[4097];
     unsigned char data_to_encrypt[16];
     unsigned char data_after_encrypt[16];
     unsigned char *dae;
     unsigned long fsize;
+    //send file
     while(1){
         memset(path,0,sizeof(path));
         printf("Please input path of the file you wanna send:\n");
@@ -81,6 +81,7 @@ int main(){
         memset(data_to_encrypt,0,sizeof(data_to_encrypt));
         sendFile(fp,fsize,path,data_to_encrypt,data_after_encrypt,expansionkey,clnt_sock);
         fclose(fp);
+        //cal SHA256 val
         printf("\nthe sender SHA256-hash value is:\n");
         SHA256(s, h);
         for (int i = 0; i < 8; ++i)
