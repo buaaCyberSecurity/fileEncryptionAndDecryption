@@ -1,6 +1,6 @@
 ### 运行环境
 
-JDK1.8
+ubuntu + JDK1.8
 
 ### 安装并配置JDK1.8
 
@@ -32,15 +32,17 @@ java -version
 
 ### 运行
 
-> FileTransUtil-User1 
+> 发送端：User1-send
 >
-> FileTransUtil-User2
+> 接收端：User2-receive
 >
-> 为模拟的两个终端实体，可以分别发送和接收文件（实质上内容完全一样）
+> 为模拟的两个终端实体，分别发送和接收文件
 
 ```bash
-cd FileTransUtil-User1
-chmod +777 run.sh 
+cd User1-send
+chmod +777 run.sh
+cd User2-receive
+chmod +777 run.sh
 双击运行脚本run.sh即可打开GUI
 //若不能打开请参考：https://blog.csdn.net/miffywm/article/details/103382405
 ```
@@ -51,9 +53,12 @@ chmod +777 run.sh
 
 打开User1，运行`run.sh`， 输入IP和端口号（IP格式：`x.x.x.x`），选择文件，点击`Send`
 
+（点击SHA256，查看发送文件的SHA256编码）
+
 接收文件：
 
 打开User2，运行`run.sh`， 输入IP和端口号（IP格式：`x.x.x.x`），点击 `Rec`
 
-**若发送成功可在User2的文件夹下接收到文件，并且两个GUI窗口会退出**
+（点击SHA256，查看接收文件的SHA256编码）
 
+**若发送成功可在User2-receive/receiver的文件夹下接收到文件**
