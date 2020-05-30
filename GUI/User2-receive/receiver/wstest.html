@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>测试WebSocket</title>
+</head>
+<body>
+<div>
+	
+</div>
+<center>
+<div>
+	<h1>WebSocket群聊</h1>
+	<input type="text" id="Group_no" placeholder="请输入房间号"/><br>
+	<input type="text" id="userId" placeholder="请输入用户账号"/><br>
+    <input type="text" id="userName" placeholder="请输入昵称"/><br>
+	<input type="submit" value="连接" onclick="connect()" /><br>
+	<textarea rows="3" cols="20" id="content"></textarea><br>
+	<input type="submit" value="发送" onclick="start()" />
+    <br>
+</div>
+<div id="messages"></div>
+</center>
+<script type="text/javascript">
+    var webSocket = null;
+	//收到消息
+    function onMessage(event) {
+        document.getElementById('messages').innerHTML
+            += '<br />' + event.data;
+    }
+	//建立连接
+    function onOpen(event) {
+        document.getElementById('messages').innerHTML
+            = '连接已经建立';
+    }
+	//发生错误
+    function onError(event) {
+        alert("发生错误");
+		webSocket = null;
+    }
+	//连接关闭
+    function onClose(event) {
+        alert("连接关闭");
+		webSocket = null;
+    }
+	//连接
+    function connect() {
+		//获取群号
+        var Group_no = document.getElementById('Group_no').value;
+		//获取昵称
+        var userId = document.getElementById('userId').value;
+        var userName = document.getElementById('userName').value;
+		//验证非法数据
+        // if (url == '' || nickname == '') {
+        //     alert("群号和用户名不能为空");
+        //     return;
+        // }
+		//验证是否已经建立连接
+		if(webSocket!=null){
+			alert("已经建立过连接，如需重新建立连接，请自行更改逻辑，或者重新刷新页面");
+			return; 
+		}
+		//创建Websocket连接url
+        var url = 'ws://114.115.142.227:80/webSocket/' + Group_no + '/' + userId + '/' + userName ;
+		//实例化WebSocket
+        webSocket = new WebSocket(url);
+		//出现错误
+        webSocket.onerror = function(event) {
+            onError(event)
+        };
+		//调用创建连接
+        webSocket.onopen = function(event) {
+            onOpen(event)
+        };
+		//调用收到消息
+        webSocket.onmessage = function(event) {
+            onMessage(event)
+        };
+		//调用关闭连接
+        webSocket.onclose = function(event) {
+            onClose(event)
+        };
+    }
+	//开始发送
+    function start() {
+		//获取发送的内容
+        var text = document.getElementById('content').value;
+		if(text== ''){
+			alert("发送内容不允许为空");
+			return;
+		}
+		if(webSocket==null){
+			alert("请先建立连接");
+			return;
+		}
+		//调用WebSocket发送的方法
+        webSocket.send(text);
+		//初始化文本域的内容为空
+        document.getElementById('content').value = '';
+    }
+</script>
+</body>
+</html>
